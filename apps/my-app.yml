@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: helm-guestbook
+  namespace: argocd
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+    # Alternatively, you can use background cascading deletion
+    # - resources-finalizer.argocd.argoproj.io/background
+spec: 
+  destination: 
+    namespace: guestbook
+    server: "https://kubernetes.default.svc"
+  project: default
+  source: 
+    helm:
+      valueFiles:
+        # kube service account has permission to decrypt using kms key, secrets.yaml is in the root folder)
+        - secrets://secrets.yaml
+    path: helms
+    repoURL: "https://github.com/Seanlinsanity/ArgoCDHelmSecretsGCPKMSDemo.git"
+    targetRevision: master
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
