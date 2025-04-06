@@ -1,0 +1,2 @@
+creation_rules:
+  - gcp_kms: projects/sean-demo-455809/locations/asia-east1/keyRings/argo-cd-key/cryptoKeys/test-key-1
